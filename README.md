@@ -1,24 +1,28 @@
 # VaultFive
 
 ## CPU5005-20 Software Engineering
-### Assessment 2: Virtual Project
+### Assessment 2 — Virtual Project
 
-VaultFive is a secure desktop password manager developed by Team 4.
+VaultFive is a desktop password manager being developed by Team 4
+as part of the CPU5005-20 Software Engineering module.
 
 ## Team 4
 
-- Caleb — Project Manager / Scrum Lead
-- Fardin — Requirements & Business Analysis
-- Aaron — Technical & Architecture
-- Diana — UI/UX & Accessibility
-- Eray — Quality Assurance & Risk
+| Member | Primary Responsibility |
+|---|---|
+| Caleb | Project Manager / Scrum Lead |
+| Fardin | Requirements & Business Analysis |
+| Aaron | Technical & Architecture |
+| Diana | UI/UX & Accessibility |
+| Eray | Quality Assurance & Risk |
 
-## Project Goal
+## Project Aim
 
-The aim of VaultFive is to provide a simple desktop application
-that allows users to securely store and manage account credentials.
+The aim of VaultFive is to develop a desktop application that allows
+users to securely store and manage account credentials while applying
+appropriate software engineering and project management practices.
 
-## Planned Core Features
+## Initial Core Scope
 
 - User authentication
 - Login and logout
@@ -26,24 +30,42 @@ that allows users to securely store and manage account credentials.
 - View credentials
 - Edit credentials
 - Delete credentials
-- Search credentials
 - Password masking/reveal
 - Secure local credential storage
-- Password generator
 
-## Proposed Technology
+## Potential Enhancements
+
+- Credential search
+- Password generator
+- Password strength feedback
+
+These enhancements are subject to available development time and
+project priorities.
+
+## Proposed Technology Stack
 
 - Tauri 2
-- Rust
 - Svelte
 - TypeScript
+- Rust
 - SQLite
 
-## Development Method
+## Development Approach
 
-Team 4 is using an iterative, Scrum-inspired development approach
-with weekly project meetings and milestone reviews.
+Team 4 is following an iterative, Scrum-inspired development approach.
+The project is divided into short development stages with regular
+reviews of requirements, risks, testing and progress.
 
-## Status
+## Communication
 
-Project in development.
+Formal weekly meetings are held through Microsoft Teams.
+
+WhatsApp is used for quick questions, reminders and informal
+out-of-hours coordination.
+
+GitHub is used for source control, issue tracking and development
+evidence.
+
+## Project Status
+
+Development in progress.
