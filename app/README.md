@@ -1,20 +1,7 @@
-# VaultFive Application
+# Tauri + SvelteKit + TypeScript
 
-This directory contains the source code for the VaultFive desktop
-password manager.
+This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
 
-## Planned Technology Stack
+## Recommended IDE Setup
 
-- Tauri 2
-- Svelte
-- TypeScript
-- Rust
-- SQLite
-
-## Purpose
-
-The application will provide the core functionality required for
-VaultFive, including user authentication and secure management of
-stored credentials.
-
-Application source files will be added as development progresses.
+[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
