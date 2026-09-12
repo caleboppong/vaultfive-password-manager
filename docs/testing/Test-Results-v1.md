@@ -114,9 +114,9 @@ Test credentials were used during testing and were not real account credentials.
 
 | TC16 | Credential Persistence | Saved credentials should remain available after the vault is locked and unlocked again. | After locking and successfully unlocking the vault again, the edited GitHub credential remained available with the updated username. | PASS |
 
-| TC17 | Unauthenticated Vault Access | Credential operations should be rejected while the vault is locked. | Backend credential commands require an active in-memory encryption key, but direct unauthenticated command rejection has not yet been formally executed as a test case. | NOT RUN |
+| TC17 | Unauthenticated Vault Access | Automated Rust tests verified the vault session-state protection. When the encryption key was absent, session key access returned "Vault is locked.". When a valid in-memory key was present, session key access succeeded. cargo test completed with 2 passed and 0 failed. | PASS |
 
-| TC18 | Basic Accessibility / Keyboard Review | Core controls should be usable with keyboard navigation and have appropriate labels/focus behaviour. | Formal accessibility and keyboard review has not yet been completed. | NOT RUN |
+| TC18 | Basic Accessibility / Keyboard Review | Core application controls were successfully navigated using the Tab key without relying on the mouse. Keyboard focus moved through the authentication screen, dashboard controls, credential actions and Add Credential form controls. Labels and controls remained understandable during keyboard-only navigation. | PASS |
 
 
 
