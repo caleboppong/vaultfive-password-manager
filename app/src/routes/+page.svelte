@@ -64,7 +64,7 @@
 
     try {
       const result = await invoke<string>("initialise_vault", {
-        masterPassword
+        masterPassword,
       });
 
       message = result;
@@ -98,7 +98,7 @@
 
     try {
       const valid = await invoke<boolean>("verify_master_password", {
-        masterPassword: loginPassword
+        masterPassword: loginPassword,
       });
 
       if (valid) {
@@ -116,12 +116,18 @@
     }
   }
 
-  function lockVault() {
-    vaultUnlocked = false;
-    loginPassword = "";
-    message = "";
-    messageType = "";
-    showLoginPassword = false;
+  async function lockVault() {
+    try {
+      await invoke("lock_vault");
+
+      vaultUnlocked = false;
+      loginPassword = "";
+      message = "";
+      messageType = "";
+      showLoginPassword = false;
+    } catch (error) {
+      showError(String(error));
+    }
   }
 
   function showError(text: string) {
@@ -178,7 +184,6 @@
         <div class="spinner"></div>
         <p>Opening VaultFive...</p>
       </div>
-
     {:else if !vaultExists}
       <div class="card">
         <div class="mobile-brand">
@@ -277,7 +282,6 @@
           </div>
         </div>
       </div>
-
     {:else if !vaultUnlocked}
       <div class="card">
         <div class="mobile-brand">
@@ -336,11 +340,8 @@
           </button>
         </form>
 
-        <p class="local-note">
-          Your vault is stored locally on this device.
-        </p>
+        <p class="local-note">Your vault is stored locally on this device.</p>
       </div>
-
     {:else}
       <div class="dashboard-card">
         <div class="dashboard-header">
@@ -355,6 +356,8 @@
           <button class="lock-button" type="button" on:click={lockVault}>
             Lock Vault
           </button>
+
+          
         </div>
 
         <div class="empty-state">
@@ -363,7 +366,8 @@
           <h3>No credentials yet</h3>
 
           <p>
-            Your saved credentials will appear here once credential management is implemented.
+            Your saved credentials will appear here once credential management
+            is implemented.
           </p>
         </div>
       </div>
@@ -385,8 +389,13 @@
     min-width: 320px;
     min-height: 100vh;
     font-family:
-      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif;
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
     color: #172033;
     background: #f4f6fb;
   }
@@ -407,8 +416,11 @@
     padding: 42px 50px;
     display: flex;
     flex-direction: column;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(79, 117, 255, 0.22), transparent 32%),
+    background: radial-gradient(
+        circle at 20% 20%,
+        rgba(79, 117, 255, 0.22),
+        transparent 32%
+      ),
       linear-gradient(145deg, #111a35 0%, #172652 55%, #1c3471 100%);
     color: white;
   }
@@ -504,8 +516,11 @@
     padding: 48px;
     display: grid;
     place-items: center;
-    background:
-      radial-gradient(circle at 80% 15%, rgba(92, 119, 255, 0.08), transparent 25%),
+    background: radial-gradient(
+        circle at 80% 15%,
+        rgba(92, 119, 255, 0.08),
+        transparent 25%
+      ),
       #f6f8fc;
   }
 
