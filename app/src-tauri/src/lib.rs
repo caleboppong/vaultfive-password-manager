@@ -204,22 +204,17 @@ fn ensure_encryption_salt(
     Ok(salt.to_vec())
 }
 
-fn get_session_key(
-    state: &State<'_, VaultState>,
-) -> Result<[u8; 32], String> {
-    let stored_key = state
+fn session_key_from_vault_state(state: &VaultState) -> Result<[u8; 32], String> {
+    let key_guard = state
         .encryption_key
         .lock()
-        .map_err(|_| {
-            "Could not access vault state.".to_string()
-        })?;
+        .map_err(|_| "Could not access vault state.".to_string())?;
 
-    stored_key
-        .as_ref()
-        .copied()
-        .ok_or_else(|| {
-            "Vault is locked.".to_string()
-        })
+    key_guard.ok_or_else(|| "Vault is locked.".to_string())
+}
+
+fn get_session_key(state: &State<'_, VaultState>) -> Result<[u8; 32], String> {
+    session_key_from_vault_state(state.inner())
 }
 
 fn encrypt_data(
@@ -864,4 +859,35 @@ pub fn run() {
         .expect(
             "error while running Tauri application",
         );
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn locked_vault_rejects_session_key_access() {
+        let state = VaultState {
+            encryption_key: Mutex::new(None),
+        };
+
+        let result = session_key_from_vault_state(&state);
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), "Vault is locked.");
+    }
+
+    #[test]
+    fn unlocked_vault_allows_session_key_access() {
+        let expected_key = [42u8; 32];
+
+        let state = VaultState {
+            encryption_key: Mutex::new(Some(expected_key)),
+        };
+
+        let result = session_key_from_vault_state(&state);
+
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), expected_key);
+    }
 }
