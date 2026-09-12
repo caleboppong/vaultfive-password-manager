@@ -4,6 +4,7 @@
 
   let loading = true;
   let vaultExists = false;
+  let vaultUnlocked = false;
 
   let masterPassword = "";
   let confirmPassword = "";
@@ -101,9 +102,10 @@
       });
 
       if (valid) {
-        message = "Vault unlocked successfully.";
-        messageType = "success";
+        vaultUnlocked = true;
         loginPassword = "";
+        message = "";
+        messageType = "";
       } else {
         showError("Incorrect master password.");
       }
@@ -112,6 +114,14 @@
     } finally {
       submitting = false;
     }
+  }
+
+  function lockVault() {
+    vaultUnlocked = false;
+    loginPassword = "";
+    message = "";
+    messageType = "";
+    showLoginPassword = false;
   }
 
   function showError(text: string) {
@@ -168,6 +178,7 @@
         <div class="spinner"></div>
         <p>Opening VaultFive...</p>
       </div>
+
     {:else if !vaultExists}
       <div class="card">
         <div class="mobile-brand">
@@ -266,7 +277,8 @@
           </div>
         </div>
       </div>
-    {:else}
+
+    {:else if !vaultUnlocked}
       <div class="card">
         <div class="mobile-brand">
           <div class="logo small">V</div>
@@ -327,6 +339,33 @@
         <p class="local-note">
           Your vault is stored locally on this device.
         </p>
+      </div>
+
+    {:else}
+      <div class="dashboard-card">
+        <div class="dashboard-header">
+          <div>
+            <div class="status-badge">VAULT UNLOCKED</div>
+            <h2>Your vault</h2>
+            <p class="subtitle">
+              Your VaultFive vault is unlocked and ready to use.
+            </p>
+          </div>
+
+          <button class="lock-button" type="button" on:click={lockVault}>
+            Lock Vault
+          </button>
+        </div>
+
+        <div class="empty-state">
+          <div class="empty-icon">V</div>
+
+          <h3>No credentials yet</h3>
+
+          <p>
+            Your saved credentials will appear here once credential management is implemented.
+          </p>
+        </div>
       </div>
     {/if}
   </section>
@@ -470,13 +509,18 @@
       #f6f8fc;
   }
 
-  .card {
+  .card,
+  .dashboard-card {
     width: min(100%, 500px);
     padding: 44px;
     border: 1px solid #e5e9f2;
     border-radius: 24px;
     background: white;
     box-shadow: 0 22px 60px rgba(35, 48, 79, 0.09);
+  }
+
+  .dashboard-card {
+    width: min(100%, 760px);
   }
 
   .mobile-brand {
@@ -579,7 +623,8 @@
   }
 
   .visibility-button:focus-visible,
-  .primary-button:focus-visible {
+  .primary-button:focus-visible,
+  .lock-button:focus-visible {
     outline: 3px solid rgba(75, 104, 221, 0.28);
     outline-offset: 2px;
   }
@@ -688,6 +733,69 @@
     animation: spin 0.8s linear infinite;
   }
 
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 34px;
+  }
+
+  .lock-button {
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid #d8deeb;
+    border-radius: 10px;
+    background: white;
+    color: #3c465b;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .lock-button:hover {
+    background: #f5f7fb;
+  }
+
+  .empty-state {
+    min-height: 330px;
+    padding: 50px 25px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    text-align: center;
+    border: 1px dashed #d9deea;
+    border-radius: 18px;
+    background: #fafbfe;
+  }
+
+  .empty-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: #edf1ff;
+    color: #4b68da;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .empty-state h3 {
+    margin: 0 0 9px;
+    color: #283247;
+    font-size: 20px;
+  }
+
+  .empty-state p {
+    max-width: 390px;
+    margin: 0;
+    color: #7a8394;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
   @keyframes spin {
     to {
       transform: rotate(360deg);
@@ -709,6 +817,24 @@
 
     .mobile-brand {
       display: flex;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .dashboard-card {
+      min-height: 100vh;
+      padding: 30px 22px;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .dashboard-header {
+      display: grid;
+    }
+
+    .lock-button {
+      width: 100%;
     }
   }
 
