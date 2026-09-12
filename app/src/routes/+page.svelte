@@ -114,7 +114,7 @@
 
     try {
       await invoke<string>("initialise_vault", {
-        masterPassword
+        masterPassword,
       });
 
       vaultExists = true;
@@ -124,7 +124,7 @@
       showConfirmPassword = false;
 
       showSuccess(
-        "Vault created successfully. Unlock it with your master password."
+        "Vault created successfully. Unlock it with your master password.",
       );
     } catch (error) {
       showError(error);
@@ -145,7 +145,7 @@
 
     try {
       const valid = await invoke<boolean>("verify_master_password", {
-        masterPassword: loginPassword
+        masterPassword: loginPassword,
       });
 
       if (!valid) {
@@ -259,7 +259,7 @@
           id: editingId,
           service,
           username,
-          password
+          password,
         });
 
         showSuccess("Credential updated successfully.");
@@ -267,7 +267,7 @@
         await invoke<number>("add_credential", {
           service,
           username,
-          password
+          password,
         });
 
         showSuccess("Credential added successfully.");
@@ -282,9 +282,49 @@
     }
   }
 
+  function generatePassword() {
+    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowercase = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*()-_=+[]{}?";
+    const allCharacters = uppercase + lowercase + numbers + symbols;
+
+    function randomCharacter(characters: string) {
+      const values = new Uint32Array(1);
+      crypto.getRandomValues(values);
+      return characters[values[0] % characters.length];
+    }
+
+    const generatedCharacters = [
+      randomCharacter(uppercase),
+      randomCharacter(lowercase),
+      randomCharacter(numbers),
+      randomCharacter(symbols),
+    ];
+
+    while (generatedCharacters.length < 20) {
+      generatedCharacters.push(randomCharacter(allCharacters));
+    }
+
+    for (let i = generatedCharacters.length - 1; i > 0; i--) {
+      const values = new Uint32Array(1);
+      crypto.getRandomValues(values);
+
+      const j = values[0] % (i + 1);
+
+      [generatedCharacters[i], generatedCharacters[j]] = [
+        generatedCharacters[j],
+        generatedCharacters[i],
+      ];
+    }
+
+    password = generatedCharacters.join("");
+    showCredentialPassword = true;
+  }
+
   async function deleteCredential(credential: Credential) {
     const confirmed = window.confirm(
-      `Delete the credential for ${credential.service}?`
+      `Delete the credential for ${credential.service}?`,
     );
 
     if (!confirmed) {
@@ -295,7 +335,7 @@
 
     try {
       await invoke("delete_credential", {
-        id: credential.id
+        id: credential.id,
       });
 
       revealedPasswords[credential.id] = false;
@@ -313,7 +353,7 @@
     revealedPasswords[id] = !revealedPasswords[id];
 
     revealedPasswords = {
-      ...revealedPasswords
+      ...revealedPasswords,
     };
   }
 
@@ -324,10 +364,7 @@
 
 <svelte:head>
   <title>VaultFive Password Manager</title>
-  <meta
-    name="description"
-    content="VaultFive secure local password manager"
-  />
+  <meta name="description" content="VaultFive secure local password manager" />
 </svelte:head>
 
 {#if loading && !vaultUnlocked}
@@ -346,8 +383,8 @@
         <h1>Your passwords.<br />Your device.<br />Your control.</h1>
 
         <p class="brand-description">
-          A local desktop password manager designed to protect your
-          credentials without relying on cloud storage.
+          A local desktop password manager designed to protect your credentials
+          without relying on cloud storage.
         </p>
 
         <div class="security-points">
@@ -380,7 +417,11 @@
         </p>
 
         {#if message}
-          <div class:success={messageType === "success"} class:error={messageType === "error"} class="message">
+          <div
+            class:success={messageType === "success"}
+            class:error={messageType === "error"}
+            class="message"
+          >
             {message}
           </div>
         {/if}
@@ -428,14 +469,12 @@
             </button>
           </div>
 
-          <button class="primary-button" type="submit">
-            Create Vault
-          </button>
+          <button class="primary-button" type="submit"> Create Vault </button>
         </form>
 
         <p class="auth-note">
-          VaultFive does not provide online password recovery. Keep your
-          master password safe.
+          VaultFive does not provide online password recovery. Keep your master
+          password safe.
         </p>
       </div>
     </section>
@@ -479,12 +518,14 @@
 
         <h2>Welcome back</h2>
 
-        <p class="subtitle">
-          Enter your master password to unlock VaultFive.
-        </p>
+        <p class="subtitle">Enter your master password to unlock VaultFive.</p>
 
         {#if message}
-          <div class:success={messageType === "success"} class:error={messageType === "error"} class="message">
+          <div
+            class:success={messageType === "success"}
+            class:error={messageType === "error"}
+            class="message"
+          >
             {message}
           </div>
         {/if}
@@ -511,9 +552,7 @@
             </button>
           </div>
 
-          <button class="primary-button" type="submit">
-            Unlock Vault
-          </button>
+          <button class="primary-button" type="submit"> Unlock Vault </button>
         </form>
 
         <div class="locked-note">
@@ -557,11 +596,7 @@
           </div>
         </div>
 
-        <button
-          class="lock-sidebar-button"
-          type="button"
-          on:click={lockVault}
-        >
+        <button class="lock-sidebar-button" type="button" on:click={lockVault}>
           Lock Vault
         </button>
       </div>
@@ -572,16 +607,10 @@
         <div>
           <p class="eyebrow">VAULT UNLOCKED</p>
           <h1>Your vault</h1>
-          <p>
-            Securely manage the credentials stored on this device.
-          </p>
+          <p>Securely manage the credentials stored on this device.</p>
         </div>
 
-        <button
-          class="header-lock-button"
-          type="button"
-          on:click={lockVault}
-        >
+        <button class="header-lock-button" type="button" on:click={lockVault}>
           Lock Vault
         </button>
       </header>
@@ -608,11 +637,7 @@
           />
         </div>
 
-        <button
-          type="button"
-          class="add-button"
-          on:click={openAddCredential}
-        >
+        <button type="button" class="add-button" on:click={openAddCredential}>
           + Add Credential
         </button>
       </section>
@@ -641,9 +666,7 @@
               </p>
 
               <h2>
-                {editingId === null
-                  ? "Add a credential"
-                  : "Update credential"}
+                {editingId === null ? "Add a credential" : "Update credential"}
               </h2>
             </div>
 
@@ -706,6 +729,14 @@
                     {showCredentialPassword ? "Hide" : "Show"}
                   </button>
                 </div>
+
+                <button
+                  type="button"
+                  class="generate-password-button"
+                  on:click={generatePassword}
+                >
+                  Generate Secure Password
+                </button>
               </div>
             </div>
 
@@ -798,8 +829,7 @@
                   <button
                     type="button"
                     class="reveal-button"
-                    on:click={() =>
-                      togglePasswordVisibility(credential.id)}
+                    on:click={() => togglePasswordVisibility(credential.id)}
                   >
                     {revealedPasswords[credential.id] ? "Hide" : "Reveal"}
                   </button>
@@ -916,8 +946,7 @@
     overflow: hidden;
     padding: 70px clamp(40px, 6vw, 100px);
     color: white;
-    background:
-      radial-gradient(
+    background: radial-gradient(
         circle at 15% 20%,
         rgba(90, 126, 255, 0.42),
         transparent 33%
@@ -1594,10 +1623,7 @@
     max-width: 240px;
     overflow: hidden;
     color: #344056;
-    font-family:
-      "SFMono-Regular",
-      Consolas,
-      monospace;
+    font-family: "SFMono-Regular", Consolas, monospace;
     font-size: 13px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1777,5 +1803,31 @@
     .form-actions button {
       width: 100%;
     }
+  }
+
+  .generate-password-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 14px;
+    border: 1px solid #c7ccd8;
+    border-radius: 8px;
+    background: #f5f7fb;
+    color: #26324b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .generate-password-button:hover {
+    background: #e9edf6;
+    border-color: #aeb7c8;
+  }
+
+  .generate-password-button:focus-visible {
+    outline: 3px solid rgba(55, 95, 190, 0.25);
+    outline-offset: 2px;
   }
 </style>
